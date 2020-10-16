@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EmployeePayrollFileIOService {
 	public static String PAYROLL_FILE_NAME = "payroll-file.txt";
@@ -24,7 +26,7 @@ public class EmployeePayrollFileIOService {
 		}
 	}
 
-	public long countEntries(List<EmployeePayrollData> employeePayrollList) {
+	public long countEntries() {
 		long entries = 0;
 		try {
 			entries = Files.lines(new File(PAYROLL_FILE_NAME).toPath()).count();
@@ -42,5 +44,26 @@ public class EmployeePayrollFileIOService {
 		catch(IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public List<EmployeePayrollData> readEntries(){
+		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+		
+		try {
+			List<String> payrollStringList =  Files.lines(new File(PAYROLL_FILE_NAME).toPath()).map(line -> line.trim()).collect(Collectors.toList());
+			int entries = (int) countEntries();
+			for(int i = 0; i < entries; i++) {
+				String detailsOfSingleEmployee = payrollStringList.get(i).replaceAll("[\\n]", "");
+				String[] detailsOfSingleEmployeeSplitArray = detailsOfSingleEmployee.split("[ ](.*?)=");
+				int id = Integer.parseInt(detailsOfSingleEmployeeSplitArray[1]);
+				String name = detailsOfSingleEmployeeSplitArray[2];
+				double salary = Double.parseDouble(detailsOfSingleEmployeeSplitArray[3]);
+				EmployeePayrollData employeePayrollData = new EmployeePayrollData(id, name, salary);
+				employeePayrollList.add(employeePayrollData);
+			}			
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		return employeePayrollList;
 	}
 }

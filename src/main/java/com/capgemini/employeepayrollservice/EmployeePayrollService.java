@@ -46,12 +46,18 @@ public class EmployeePayrollService {
 	public long countEntries(IOService ioService) {
 		long entries = 0;
 		if(ioService.equals(IOService.FILE_IO))
-			entries = new EmployeePayrollFileIOService().countEntries(employeePayrollList);
+			entries = new EmployeePayrollFileIOService().countEntries();
 		return entries;
 	}
 	public void printEntries(IOService ioService) {
 		if(ioService.equals(IOService.FILE_IO))
 			new EmployeePayrollFileIOService().printEntries();
+	}
+	public List<EmployeePayrollData> readPayroll(IOService ioService) {
+		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+		if(ioService.equals(IOService.FILE_IO))
+			employeePayrollList = new EmployeePayrollFileIOService().readEntries();
+		return employeePayrollList;
 	}
 }
 
