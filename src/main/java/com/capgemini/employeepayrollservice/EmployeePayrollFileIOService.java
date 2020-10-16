@@ -30,7 +30,17 @@ public class EmployeePayrollFileIOService {
 			entries = Files.lines(new File(PAYROLL_FILE_NAME).toPath()).count();
 		}
 		catch(IOException e) {
+			e.printStackTrace();
 	}
 		return entries;
+	}
+	
+	public void printEntries() {
+		try {
+			Files.lines(new File(PAYROLL_FILE_NAME).toPath()).forEach(System.out::println);
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
